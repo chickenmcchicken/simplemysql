@@ -1,5 +1,10 @@
 #include "../include/database.hpp"
 
+#include <format>
+#include <string>
+#include <cstring>
+#include <algorithm> 
+
 
 
 void database::setIP(const char* ip)
@@ -160,3 +165,86 @@ void database::init()
     std::cout <<"setup complete" <<std::endl;
 }
 
+void database::shutdown()
+{
+    mysql_close(database::db);
+}
+
+
+void database::new_table(std::string table_name,std::string data_type, std::string  column)
+{
+    std::string st = std::format("CREATE TABLE IF NOT EXITS {}({}{});", table_name, column, data_type);
+    mysql_query(database::db, table_name.c_str());
+}
+
+
+
+
+
+
+void database::new_column(std::string table_name, std::string data_type, std::string column)
+{
+    std::string st = std::format("ALTER TABLE {} ADD IF NOT EXISTs {} {};", table_name, column, data_type);
+}
+
+void database::new_column(std::string table_name, std::string data_type[], std::string column[])
+{
+    int x = 0 ;//place holder to loop theough array
+    // we will be looping through columns
+    do
+    {
+        database::new_column(table_name, data_type[x], column[x]);
+    }
+    while( x <= sizeof(column)/sizeof(column[0]));
+}
+
+
+/*
+type args: column, database, table row
+
+
+*/
+void database::_delete(std::string type, std::string name, std::string table = "")
+{
+    std::string db_s = std::string(database::info.db_name);
+    //lowercases type
+    for(auto x: type)
+    {
+        x= tolower(x);
+    }
+
+    if(type =="database")
+    {
+        std::string st= std::format("DROP DATABASE IF EXISTS {};", name); 
+        mysql_query(db, st.c_str());
+    }
+    else if(type == "table")
+    {
+        std::string st= std::format("DROP TABLE IF EXISTS {};", name); 
+        mysql_query(db, st.c_str());
+
+
+    }
+    else if(type == "column")
+    {
+        std::string st= std::format("DROP COLUMN IF EXISTS {};", name); 
+        mysql_query(db, st.c_str());
+    
+    }
+    else if(type == "row")
+    {
+        std::string st= std::format("DROP ROW IF EXISTS {};", name); 
+        mysql_query(db, st.c_str());
+    
+    }
+    else
+    {
+        std::cerr << "invalid usage" << std::endl;
+    }
+}
+
+
+void database::shutdown()
+{
+    mysql_close(database::db);
+}

@@ -10,7 +10,7 @@ int main()
     {
         Database.setIP("127.0.0.1");
         Database.setPort(3306);
-        Database.setDBName("mysql");
+        Database.setDBName("test");
         Database.setPassword("");
         Database.setUser("root");
         Database.init();

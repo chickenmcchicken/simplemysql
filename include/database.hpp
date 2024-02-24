@@ -8,7 +8,7 @@
 #include <mysql_connection.h>
 #include <mysql_error.h>
 #include <mysql_driver.h>
-
+#include <string>
 
 
 
@@ -33,7 +33,14 @@ class database
         MYSQL *db= mysql_init(NULL); //initilaes it
         bool connect();
         bool callback_status();
-        MYSQL_RES fetch_data();// todo
+        void new_table(std::string  table_name, std::string data_type, std::string column); //table with 1 column 
+        void new_column(std::string  table_name,  std::string data_type, std::string  column);
+        void new_column(std::string  table_name,  std::string data_type[], std::string  column[]);
+        void _delete(std::string type, std::string name, std::string table= "");
+
+        void shutdown();
+
+        MYSQL_RES return_data();// todo
         db_info info;
 
 
